@@ -7,7 +7,7 @@ using namespace std;
 struct anagrafica
 {
     string cognome, matricola;
-    int distanza[30];
+    int distanza[30], x[30], y[30];
 };
 
 void registra(int &num, anagrafica partecipanti[])
@@ -52,6 +52,37 @@ void stampa (anagrafica partecipanti[])
     fin.close();
 }
 
+void coordinate (int num, anagrafica partecipanti[])
+{
+    for (int c = 0; c < num; c++)
+    {
+        for (int j = 0; j < 30; j++)
+        {
+            partecipanti[c].x[j] = rand()%101;
+            partecipanti[c].y[j] = rand()%101;
+        }
+    }
+
+    ofstream fout (file);
+
+    for (int c = 0; c < num; c++)
+    {
+        fout << partecipanti[c].matricola << ", " << partecipanti[c].cognome << endl << "COORDINATE: ";
+        for (int j = 0; j < 30; j++)
+        {
+            fout << partecipanti[c].x[j] << ";" << partecipanti[c].y[j] << "  ";
+        }
+        fout << endl << endl;
+    }
+
+    fout.close();
+}
+
+void distanza (int num, anagrafica partecipanti)
+{
+
+}
+
 int main()
 {
     srand(time(NULL));
@@ -82,6 +113,28 @@ int main()
     cout<<"Perfetto, i partecipanti sono pronti e sono elencati qui sotto:"<<endl<<endl;
     stampa(partecipanti);
     cout<<"Essi sono indicati con i loro codice matricola e i loro cognomi"<<endl<<endl;
+
+    cout<<endl<<"Constatati i partecipanti, possiamo dare il via alla competizione e visionare i risultati"<<endl;
+    cout<<"sei pronto? (s/n) ";
+    do{
+        cin>>sc;
+        if (sc == "n")
+            cout<<"ora? ";
+    }while(sc != "s");
+
+    coordinate(num, partecipanti);
+    system("cls");
+    stampa(partecipanti);
+
+    cout << "Un po' disordinato, non trovi?" <<endl;
+    cout << "Mettiamo un po' d'ordine calcolando le distanze percorse da ogni partecipante\nDimmi quando sei pronto (s/n) ";
+        do{
+        cin>>sc;
+        if (sc == "n")
+            cout<<"ora? ";
+    }while(sc != "s");
+
+    distanza(num, partecipanti);
 
     return 0;
 }
