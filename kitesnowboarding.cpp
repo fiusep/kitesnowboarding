@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cmath>
 #include <time.h>
 #define file "gara.txt"
 using namespace std;
@@ -7,7 +8,7 @@ using namespace std;
 struct anagrafica
 {
     string cognome, matricola;
-    int distanza[30], x[30], y[30];
+    int distanza = 0, x[30], y[30], tempo;
 };
 
 void registra(int &num, anagrafica partecipanti[])
@@ -56,7 +57,8 @@ void coordinate (int num, anagrafica partecipanti[])
 {
     for (int c = 0; c < num; c++)
     {
-        for (int j = 0; j < 30; j++)
+        partecipanti[c].tempo = rand()%21+10;
+        for (int j = 0; j < partecipanti[c].tempo; j++)
         {
             partecipanti[c].x[j] = rand()%101;
             partecipanti[c].y[j] = rand()%101;
@@ -67,8 +69,8 @@ void coordinate (int num, anagrafica partecipanti[])
 
     for (int c = 0; c < num; c++)
     {
-        fout << partecipanti[c].matricola << ", " << partecipanti[c].cognome << endl << "COORDINATE: ";
-        for (int j = 0; j < 30; j++)
+        fout << partecipanti[c].matricola << ", " << partecipanti[c].cognome << endl << "COORDINATE DELLA MEZZ'ORA: ";
+        for (int j = 0; j < partecipanti[c].tempo; j++)
         {
             fout << partecipanti[c].x[j] << ";" << partecipanti[c].y[j] << "  ";
         }
@@ -78,9 +80,15 @@ void coordinate (int num, anagrafica partecipanti[])
     fout.close();
 }
 
-void distanza (int num, anagrafica partecipanti)
+void distanza (int num, anagrafica partecipanti[])
 {
-
+    for(int c = 0; c < num; c++)
+    {
+        for(int j = 0; j < partecipanti[c].tempo; j++)
+        {
+            partecipanti[c].distanza = partecipanti[c].distanza + abs(sqrt(pow((partecipanti[c].x[j] - partecipanti[c].x[j+1]), 2) + pow((partecipanti[c].y[j] - partecipanti[c].y[j+1]), 2)));
+        }
+    }
 }
 
 int main()
@@ -92,14 +100,16 @@ int main()
     cout<<"***BENVENUTO ALLA GARA DI KITE-SNOWBOARDING!!***"<<endl;
 
     do{
-        cout<<"Registra qualche atleta per dare il via alla competizione, sei d'accordo? (s/n)"<<endl;
+        cout<<"Registra qualche atleta per dare il via alla competizione (min 3, max 20), sei d'accordo? (s/n)"<<endl;
         cin>>sc;
     }while(sc != "s" && sc != "n");
 
     if (sc == "s")
     {
-        cout<<"Quanti atleti vuoi inserire? ";
-        cin>>num;
+        do{
+            cout<<"Quanti atleti vuoi inserire? ";
+            cin>>num;
+        }while(num < 3 || num > 20);
     }
     else
     {
@@ -112,9 +122,10 @@ int main()
     system("cls");
     cout<<"Perfetto, i partecipanti sono pronti e sono elencati qui sotto:"<<endl<<endl;
     stampa(partecipanti);
-    cout<<"Essi sono indicati con i loro codice matricola e i loro cognomi"<<endl<<endl;
+    cout<<"Essi sono indicati con i loro codice matricola e i loro cognomi"<<endl;
+    cout<<"Ognuno di loro ha diritto ad un massimo di 30 minuti, con possibilità di ritirarsi anche prima." << endl << endl;
 
-    cout<<endl<<"Constatati i partecipanti, possiamo dare il via alla competizione e visionare i risultati"<<endl;
+    cout<<endl<<"Constatate le regole ed i partecipanti, possiamo dare il via alla competizione e visionare i risultati"<<endl;
     cout<<"sei pronto? (s/n) ";
     do{
         cin>>sc;
@@ -135,6 +146,18 @@ int main()
     }while(sc != "s");
 
     distanza(num, partecipanti);
+
+    system("cls");
+    cout << "perfetto, le distanze sono state calcolate, ecco elencati tutti i partecipanti con la loro distanza:"<< endl << endl;
+
+    ofstream fout (file);
+    for (int c = 0; c < num; c++)
+        fout << partecipanti[c].matricola << ", " << partecipanti[c].cognome << " DISTANZA PERCORSA: " << partecipanti[c].distanza << " m" << endl << endl;
+    fout.close();
+
+    stampa(partecipanti);
+
+    anagrafica podio[3];
 
     return 0;
 }
