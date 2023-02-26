@@ -91,6 +91,27 @@ void distanza (int num, anagrafica partecipanti[])
     }
 }
 
+void primi (int num, anagrafica partecipanti[], anagrafica podio[])
+{
+    for(int c = 0; c < num; c++)
+    {
+        for(int j = c+1; j < num; j++)
+        {
+            if(partecipanti[j].distanza > partecipanti[c].distanza)
+            {
+                anagrafica temp = partecipanti[c];
+                partecipanti[c] = partecipanti[j];
+                partecipanti[j] = temp;
+            }
+        }
+    }
+
+    for(int c = 0; c < 3; c++)
+    {
+        podio[c] = partecipanti[c];
+    }
+}
+
 int main()
 {
     srand(time(NULL));
@@ -123,7 +144,7 @@ int main()
     cout<<"Perfetto, i partecipanti sono pronti e sono elencati qui sotto:"<<endl<<endl;
     stampa(partecipanti);
     cout<<"Essi sono indicati con i loro codice matricola e i loro cognomi"<<endl;
-    cout<<"Ognuno di loro ha diritto ad un massimo di 30 minuti, con possibilità di ritirarsi anche prima." << endl << endl;
+    cout<<"Ognuno di loro ha diritto ad un massimo di 30 minuti, con possibilita' di ritirarsi anche prima." << endl << endl;
 
     cout<<endl<<"Constatate le regole ed i partecipanti, possiamo dare il via alla competizione e visionare i risultati"<<endl;
     cout<<"sei pronto? (s/n) ";
@@ -158,6 +179,23 @@ int main()
     stampa(partecipanti);
 
     anagrafica podio[3];
+
+    cout << "perfetto, ora che abbiamo i risultati e' il momento di svelare il podio! sei pronto? (s/n) ";
+    do{
+        cin>>sc;
+        if (sc == "n")
+            cout<<"ora? ";
+    }while(sc != "s");
+
+    primi(num, partecipanti, podio);
+
+    system("cls");
+    cout << "Grazie per aver seguito questo fantastico evento avviatosi ormai alla conclusione. Di seguito e' riportato il podio dei nostri atleti." << endl << endl;
+
+    for (int c = 0; c < 3; c++)
+        cout << c+1 << "> " << podio[c].matricola << " - " << podio[c].cognome << " - " << podio[c].distanza << " m" << endl;
+
+    cout << endl << endl << "Dunque il nostro vincitore e' " << podio[0].cognome << " con " << podio[0].distanza << " metri percorsi, ottimo lavoro.\nSperiamo di trovarvi ad assistere anche alla prossima edizione. ARRIVEDERCI!!!" << endl;
 
     return 0;
 }
