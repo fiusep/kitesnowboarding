@@ -1,3 +1,10 @@
+/*!
+\author Giuseppe Taronno
+\version 1.0
+\brief Questo software simula un evento dove si svolge una gara di KiteSnowboarding.
+\file main.cpp
+*/
+
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -5,12 +12,24 @@
 #define file "gara.txt"
 using namespace std;
 
+/*!
+\struct anagrafica
+\brief Nella struct sono contenuti i dati dei partecipanti.
+*/
 struct anagrafica
 {
     string cognome, matricola;
     int distanza = 0, x[30], y[30], tempo;
 };
 
+/*!
+\fn registra
+\brief Questa funzione chiede l'inserimento del cognome del partecipante e genera casualmente il suo codice matricola.
+\param num
+\brief Contiene il numero di partecipanti.
+\param partecipanti
+\brief Variabile della struct con informazioni relative ai partecipanti in generale.
+*/
 void registra(int &num, anagrafica partecipanti[])
 {
     string scl;
@@ -39,6 +58,11 @@ void registra(int &num, anagrafica partecipanti[])
     fout.close();
 }
 
+/*!
+\fn stampa
+\brief Stampa il contenuto del file.
+\param partecipanti
+*/
 void stampa (anagrafica partecipanti[])
 {
     ifstream fin(file);
@@ -53,6 +77,12 @@ void stampa (anagrafica partecipanti[])
     fin.close();
 }
 
+/*!
+\fn coordinate
+\brief Genera casualmente le coordinate per ogni concorrente e le scrive nel file.
+\param num
+\param partecipanti
+*/
 void coordinate (int num, anagrafica partecipanti[])
 {
     for (int c = 0; c < num; c++)
@@ -80,17 +110,31 @@ void coordinate (int num, anagrafica partecipanti[])
     fout.close();
 }
 
+/*!
+\fn distanza
+\brief Acquisisce le coordinate x e y e, tramite la formula euclidea della distanza, calcola il percorso di ogni partecipante.
+\param num
+\param partecipanti
+*/
 void distanza (int num, anagrafica partecipanti[])
 {
     for(int c = 0; c < num; c++)
     {
         for(int j = 0; j < partecipanti[c].tempo; j++)
         {
-            partecipanti[c].distanza = partecipanti[c].distanza + abs(sqrt(pow((partecipanti[c].x[j] - partecipanti[c].x[j+1]), 2) + pow((partecipanti[c].y[j] - partecipanti[c].y[j+1]), 2)));
+            partecipanti[c].distanza = abs(partecipanti[c].distanza + sqrt(pow((partecipanti[c].x[j] - partecipanti[c].x[j+1]), 2) + pow((partecipanti[c].y[j] - partecipanti[c].y[j+1]), 2)));
         }
     }
 }
 
+/*!
+\fn primi
+\brief Funzione che contiene l'algoritmo per smistare i primi tre classificati.
+\param num
+\param partecipanti
+\param podio
+\brief Variabile della struct dove sono ordinati i primi tre classificati.
+*/
 void primi (int num, anagrafica partecipanti[], anagrafica podio[])
 {
     for(int c = 0; c < num; c++)
@@ -112,6 +156,10 @@ void primi (int num, anagrafica partecipanti[], anagrafica podio[])
     }
 }
 
+/*!
+\fn main
+\brief Parte centrale del programma dove vengono descritti i vari avvenimenti e vengono richiamate le funzioni per il corretto funzionamento del programma.
+*/
 int main()
 {
     srand(time(NULL));
